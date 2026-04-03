@@ -5,7 +5,7 @@ import { getLostFoundItems } from '../api/lostFoundAPI';
 import LostFoundCard from '../components/LostFoundCard';
 import useAuth from '../hooks/useAuth';
 
-const CATEGORIES = ['electronics','clothing','books','id_card','keys','bag','wallet','other'];
+// const CATEGORIES = ['electronics','clothing','books','id_card','keys','bag','wallet','other'];
 
 const LostFound = () => {
   const navigate = useNavigate();

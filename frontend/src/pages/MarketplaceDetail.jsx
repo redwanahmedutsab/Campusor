@@ -15,7 +15,7 @@ const CONDITION_LABELS = {
 const MarketplaceDetail = () => {
   const { id }    = useParams();
   const navigate  = useNavigate();
-  const { user, isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAuth();
 
   const [product,    setProduct]    = useState(null);
   const [loading,    setLoading]    = useState(true);

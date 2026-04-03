@@ -1,110 +1,155 @@
-# 🎓 Campusor: Advanced University Management System
+# Campusor 🎓
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Django-092E20?style=for-the-badge&logo=django&logoColor=white" />
-  <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" />
-  <img src="https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white" />
-  <img src="https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white" />
-</p>
-
-**Campusor** is a sophisticated full-stack platform engineered to digitize academic workflows. By decoupling the **Django REST Framework** backend from a high-performance **React** frontend, it offers a seamless, SPA (Single Page Application) experience for students and administrators alike.
+> A university campus platform — Marketplace, Events, and Lost & Found.
+> Built with Django REST Framework + React + Tailwind CSS + PostgreSQL.
 
 ---
 
-## ⚡ Quick Navigation
-[Key Features](#-key-features) • [Tech Stack](#-tech-stack) • [Installation](#-installation--setup) • [System Architecture](#-system-architecture) • [Roadmap](#-project-roadmap)
+## 🚀 Quick Start
+
+### Backend
+
+```bash
+cd backend
+
+# 1. Create virtual environment
+python -m venv venv
+source venv/bin/activate       # Windows: venv\Scripts\activate
+
+# 2. Install packages
+pip install -r requirements.txt
+
+# 3. Set up environment
+cp .env.example .env
+# Edit .env with your PostgreSQL credentials
+
+# 4. Run migrations
+python manage.py makemigrations users
+python manage.py makemigrations marketplace
+python manage.py makemigrations events
+python manage.py makemigrations lost_found
+python manage.py migrate
+
+# 5. Create admin
+python manage.py createsuperuser
+
+# 6. Run server
+python manage.py runserver
+```
+
+Backend live at: http://localhost:8000
+
+### Frontend
+
+```bash
+cd frontend
+
+# 1. Install packages
+npm install
+
+# 2. Set up environment
+cp .env.example .env
+# .env contains: REACT_APP_API_URL=http://localhost:8000/api
+
+# 3. Run dev server
+npm start
+```
+
+Frontend live at: http://localhost:3000
 
 ---
 
-## 🚀 Key Features
+## 📁 Project Structure
 
-### 🏫 Academic Administration
-* **Student Lifecycle:** Managed enrollment, profile tracking, and academic status.
-* **Faculty Governance:** Instructor assignment and department-specific controls.
-* **Course Registry:** Dynamic course creation with prerequisite logic.
+```
+Campusor/
+├── backend/
+│   ├── manage.py
+│   ├── requirements.txt
+│   ├── Procfile              # Render deployment
+│   ├── config/
+│   │   ├── settings.py
+│   │   ├── urls.py
+│   │   └── wsgi.py
+│   └── apps/
+│       ├── users/            # Auth — StudentUser, JWT
+│       ├── marketplace/      # Products, Categories
+│       ├── events/           # Events, RSVP
+│       └── lost_found/       # Lost & Found items
+│
+└── frontend/
+    └── src/
+        ├── api/              # Axios API calls
+        ├── context/          # AuthContext
+        ├── hooks/            # useAuth
+        ├── components/       # Navbar, Cards, ProtectedRoute
+        └── pages/            # All pages
+```
 
-### 🔐 Technical Excellence
-* **RESTful Architecture:** Clean separation of concerns with standardized JSON responses.
-* **Secure Auth:** Ready for JWT (JSON Web Token) implementation for cross-origin security.
-* **Scalable DB:** Built for PostgreSQL integration to handle high-concurrency academic data.
+---
+
+## 🔌 API Endpoints
+
+| Module | Method | Endpoint | Auth |
+|--------|--------|----------|------|
+| Auth | POST | `/api/auth/register/` | Open |
+| Auth | POST | `/api/auth/login/` | Open |
+| Auth | GET/PATCH | `/api/auth/profile/` | Required |
+| Marketplace | GET | `/api/marketplace/products/` | Open |
+| Marketplace | POST | `/api/marketplace/products/` | Required |
+| Marketplace | GET | `/api/marketplace/products/mine/` | Required |
+| Events | GET | `/api/events/` | Open |
+| Events | POST | `/api/events/` | Required |
+| Events | POST | `/api/events/<id>/rsvp/` | Required |
+| Lost & Found | GET | `/api/lost-found/` | Open |
+| Lost & Found | POST | `/api/lost-found/` | Required |
+
+---
+
+## ⚙️ Environment Variables
+
+### backend/.env
+```
+SECRET_KEY=your-secret-key
+DEBUG=True
+ALLOWED_HOSTS=localhost,127.0.0.1
+DB_NAME=campusor_db
+DB_USER=postgres
+DB_PASSWORD=yourpassword
+DB_HOST=localhost
+DB_PORT=5432
+CORS_ALLOWED_ORIGINS=http://localhost:3000
+FRONTEND_URL=http://localhost:3000
+```
+
+### frontend/.env
+```
+REACT_APP_API_URL=http://localhost:8000/api
+```
+
+---
+
+## 🌍 Deployment
+
+**Backend → Render.com**
+- Connect GitHub repo
+- Build: `pip install -r requirements.txt`
+- Start: `gunicorn config.wsgi:application --bind 0.0.0.0:$PORT`
+- Add all env vars in Render dashboard
+
+**Frontend → Vercel**
+- Connect GitHub repo
+- Root directory: `frontend`
+- Add env var: `REACT_APP_API_URL=https://your-backend.onrender.com/api`
 
 ---
 
 ## 🛠️ Tech Stack
 
-### **Backend (The Core)**
-* **Framework:** Django 4.2+
-* **API:** Django REST Framework (DRF)
-* **Database:** SQLite (Development) / PostgreSQL (Production)
-* **Environment:** Python 3.10+
-
-### **Frontend (The UI)**
-* **Library:** React.js (Hooks & Functional Components)
-* **Build Tool:** Vite (for lightning-fast HMR)
-* **State Management:** Context API / Axios for Async operations
-
----
-
-## 📂 System Architecture
-
-```text
-Campusor/
-├── 📂 backend/               # Django REST API
-│   ├── 📁 campusor/          # Core Settings
-│   ├── 📁 api/               # Business Logic & Serializers
-│   └── manage.py
-├── 📂 frontend/              # React Application
-│   ├── 📁 src/               # Components, Hooks, & Services
-│   ├── 📁 public/            # Assets
-│   └── vite.config.js
-└── README.md
-
-```
-
----
-
-## ⚙️ Installation & Setup
-
-### 1️⃣ Prepare Backend
-
-```bash
-cd backend
-python -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
-pip install -r requirements.txt
-python manage.py migrate
-python manage.py runserver
-
-```
-
-### 2️⃣ Prepare Frontend
-
-```bash
-cd frontend
-npm install
-npm run dev
-
-```
-
----
-
-## 🗺️ Project Roadmap
-
-* [x] Initial Full-Stack Architecture
-* [x] Database Schema Design
-* [ ] Role-Based Access Control (RBAC)
-* [ ] Attendance Tracking Module
-* [ ] Automated Result Generation
-* [ ] Docker Containerization (v2.0)
-
----
-
-## 👨‍💻 Developed By
-
-**Redwan Ahmed Utsab** *Software Engineer | Full-Stack Developer*
-
----
-
-## ⭐ Support
-
-If you find this project useful, please **Star** the repository! It helps me keep track of the community interest.
+| Layer | Technology |
+|-------|-----------|
+| Frontend | React 18, React Router v6, Tailwind CSS, Axios |
+| Backend | Django 4.2, Django REST Framework |
+| Auth | JWT (SimpleJWT) with refresh token rotation |
+| Database | PostgreSQL |
+| Deployment | Render + Vercel + Neon |

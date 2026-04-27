@@ -1,6 +1,3 @@
-"""
-apps/events/views.py
-"""
 from rest_framework import generics, status, filters
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -18,10 +15,10 @@ from .serializers import (
 
 class EventFilter(django_filters.FilterSet):
     upcoming = django_filters.BooleanFilter(method='filter_upcoming')
-    search   = django_filters.CharFilter(method='filter_search')
+    search = django_filters.CharFilter(method='filter_search')
 
     class Meta:
-        model  = Event
+        model = Event
         fields = ['category', 'status', 'is_free']
 
     def filter_upcoming(self, queryset, name, value):
@@ -41,13 +38,12 @@ class EventFilter(django_filters.FilterSet):
 
 
 class EventListCreateView(generics.ListCreateAPIView):
-    """GET /api/events/  |  POST /api/events/"""
     permission_classes = [IsAuthenticatedOrReadOnly]
-    parser_classes     = [MultiPartParser, FormParser, JSONParser]
-    filter_backends    = [DjangoFilterBackend, filters.OrderingFilter]
-    filterset_class    = EventFilter
-    ordering_fields    = ['start_datetime', 'created_at', 'attendee_count']
-    ordering           = ['start_datetime']
+    parser_classes = [MultiPartParser, FormParser, JSONParser]
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
+    filterset_class = EventFilter
+    ordering_fields = ['start_datetime', 'created_at', 'attendee_count']
+    ordering = ['start_datetime']
 
     def get_queryset(self):
         return Event.objects.exclude(
@@ -56,18 +52,17 @@ class EventListCreateView(generics.ListCreateAPIView):
 
     def get_serializer_class(self):
         return EventCreateSerializer if self.request.method == 'POST' \
-               else EventListSerializer
+            else EventListSerializer
 
     def perform_create(self, serializer):
         serializer.save(organizer=self.request.user)
 
 
 class EventDetailView(generics.RetrieveUpdateDestroyAPIView):
-    """GET/PATCH/DELETE /api/events/<id>/"""
-    queryset           = Event.objects.all().select_related(
-                             'organizer').prefetch_related('rsvps')
+    queryset = Event.objects.all().select_related(
+        'organizer').prefetch_related('rsvps')
     permission_classes = [IsAuthenticatedOrReadOnly]
-    parser_classes     = [MultiPartParser, FormParser, JSONParser]
+    parser_classes = [MultiPartParser, FormParser, JSONParser]
 
     def get_serializer_class(self):
         if self.request.method in ('PUT', 'PATCH'):
@@ -88,7 +83,6 @@ class EventDetailView(generics.RetrieveUpdateDestroyAPIView):
 
 
 class RSVPView(APIView):
-    """POST /api/events/<id>/rsvp/ — toggle RSVP"""
     permission_classes = [IsAuthenticated]
 
     def post(self, request, pk):
@@ -109,14 +103,13 @@ class RSVPView(APIView):
             defaults={'status': rsvp_status}
         )
         return Response({
-            'status':         rsvp.status,
+            'status': rsvp.status,
             'attendee_count': event.attendee_count,
         }, status=201 if created else 200)
 
 
 class MyEventsView(generics.ListAPIView):
-    """GET /api/events/mine/ — events I organized"""
-    serializer_class   = EventListSerializer
+    serializer_class = EventListSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
@@ -126,8 +119,7 @@ class MyEventsView(generics.ListAPIView):
 
 
 class MyRSVPsView(generics.ListAPIView):
-    """GET /api/events/attending/ — events I RSVP'd to"""
-    serializer_class   = EventListSerializer
+    serializer_class = EventListSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):

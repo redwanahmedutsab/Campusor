@@ -1,32 +1,28 @@
-"""
-apps/marketplace/serializers.py
-"""
 from rest_framework import serializers
 from .models import Product, ProductImage, Category
 
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
-        model  = Category
+        model = Category
         fields = ['id', 'name', 'icon', 'slug']
 
 
 class ProductImageSerializer(serializers.ModelSerializer):
     class Meta:
-        model  = ProductImage
+        model = ProductImage
         fields = ['id', 'image', 'is_primary', 'uploaded_at']
 
 
 class ProductListSerializer(serializers.ModelSerializer):
-    """Lightweight — for listing/search views."""
-    primary_image  = serializers.SerializerMethodField()
-    seller_name    = serializers.CharField(source='seller.full_name', read_only=True)
-    seller_avatar  = serializers.SerializerMethodField()
-    category_name  = serializers.CharField(source='category.name', read_only=True)
-    category_icon  = serializers.CharField(source='category.icon', read_only=True)
+    primary_image = serializers.SerializerMethodField()
+    seller_name = serializers.CharField(source='seller.full_name', read_only=True)
+    seller_avatar = serializers.SerializerMethodField()
+    category_name = serializers.CharField(source='category.name', read_only=True)
+    category_icon = serializers.CharField(source='category.icon', read_only=True)
 
     class Meta:
-        model  = Product
+        model = Product
         fields = [
             'id', 'title', 'price', 'is_free', 'condition', 'status',
             'location', 'views_count', 'primary_image',
@@ -50,17 +46,16 @@ class ProductListSerializer(serializers.ModelSerializer):
 
 
 class ProductDetailSerializer(serializers.ModelSerializer):
-    """Full detail with all images and seller info."""
-    images        = ProductImageSerializer(many=True, read_only=True)
-    seller_name   = serializers.CharField(source='seller.full_name',   read_only=True)
-    seller_email  = serializers.EmailField(source='seller.email',      read_only=True)
-    seller_phone  = serializers.CharField(source='seller.phone',       read_only=True)
-    seller_dept   = serializers.CharField(source='seller.department',  read_only=True)
-    category_name = serializers.CharField(source='category.name',      read_only=True)
-    is_owner      = serializers.SerializerMethodField()
+    images = ProductImageSerializer(many=True, read_only=True)
+    seller_name = serializers.CharField(source='seller.full_name', read_only=True)
+    seller_email = serializers.EmailField(source='seller.email', read_only=True)
+    seller_phone = serializers.CharField(source='seller.phone', read_only=True)
+    seller_dept = serializers.CharField(source='seller.department', read_only=True)
+    category_name = serializers.CharField(source='category.name', read_only=True)
+    is_owner = serializers.SerializerMethodField()
 
     class Meta:
-        model  = Product
+        model = Product
         fields = [
             'id', 'title', 'description', 'price', 'is_free',
             'condition', 'status', 'location', 'views_count',
@@ -81,7 +76,7 @@ class ProductCreateSerializer(serializers.ModelSerializer):
     )
 
     class Meta:
-        model  = Product
+        model = Product
         fields = [
             'title', 'description', 'price', 'is_free',
             'condition', 'category', 'location', 'uploaded_images',

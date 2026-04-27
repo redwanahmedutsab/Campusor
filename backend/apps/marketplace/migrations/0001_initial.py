@@ -6,7 +6,6 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
@@ -35,14 +34,21 @@ class Migration(migrations.Migration):
                 ('description', models.TextField()),
                 ('price', models.DecimalField(decimal_places=2, max_digits=10)),
                 ('is_free', models.BooleanField(default=False)),
-                ('condition', models.CharField(choices=[('new', 'Brand New'), ('like_new', 'Like New'), ('good', 'Good'), ('fair', 'Fair'), ('for_parts', 'For Parts')], default='good', max_length=15)),
-                ('status', models.CharField(choices=[('active', 'Active'), ('sold', 'Sold'), ('reserved', 'Reserved'), ('removed', 'Removed')], default='active', max_length=10)),
-                ('location', models.CharField(blank=True, help_text='e.g. Main campus, Library building', max_length=200)),
+                ('condition', models.CharField(
+                    choices=[('new', 'Brand New'), ('like_new', 'Like New'), ('good', 'Good'), ('fair', 'Fair'),
+                             ('for_parts', 'For Parts')], default='good', max_length=15)),
+                ('status', models.CharField(
+                    choices=[('active', 'Active'), ('sold', 'Sold'), ('reserved', 'Reserved'), ('removed', 'Removed')],
+                    default='active', max_length=10)),
+                ('location',
+                 models.CharField(blank=True, help_text='e.g. Main campus, Library building', max_length=200)),
                 ('views_count', models.PositiveIntegerField(default=0)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
-                ('category', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='products', to='marketplace.category')),
-                ('seller', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='products', to=settings.AUTH_USER_MODEL)),
+                ('category', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL,
+                                               related_name='products', to='marketplace.category')),
+                ('seller', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='products',
+                                             to=settings.AUTH_USER_MODEL)),
             ],
             options={
                 'ordering': ['-created_at'],
@@ -55,7 +61,8 @@ class Migration(migrations.Migration):
                 ('image', models.ImageField(upload_to='marketplace/%Y/%m/')),
                 ('is_primary', models.BooleanField(default=False)),
                 ('uploaded_at', models.DateTimeField(auto_now_add=True)),
-                ('product', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='images', to='marketplace.product')),
+                ('product', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='images',
+                                              to='marketplace.product')),
             ],
             options={
                 'ordering': ['-is_primary', 'uploaded_at'],

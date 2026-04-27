@@ -1,6 +1,3 @@
-"""
-apps/lost_found/views.py
-"""
 from rest_framework import generics, status, filters
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -17,7 +14,7 @@ class LostFoundFilter(django_filters.FilterSet):
     search = django_filters.CharFilter(method='filter_search')
 
     class Meta:
-        model  = LostFoundItem
+        model = LostFoundItem
         fields = ['item_type', 'category', 'status']
 
     def filter_search(self, queryset, name, value):
@@ -30,13 +27,12 @@ class LostFoundFilter(django_filters.FilterSet):
 
 
 class LostFoundListCreateView(generics.ListCreateAPIView):
-    """GET /api/lost-found/  |  POST /api/lost-found/"""
-    serializer_class   = LostFoundSerializer
+    serializer_class = LostFoundSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
-    parser_classes     = [MultiPartParser, FormParser, JSONParser]
-    filter_backends    = [DjangoFilterBackend, filters.OrderingFilter]
-    filterset_class    = LostFoundFilter
-    ordering           = ['-created_at']
+    parser_classes = [MultiPartParser, FormParser, JSONParser]
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
+    filterset_class = LostFoundFilter
+    ordering = ['-created_at']
 
     def get_queryset(self):
         return LostFoundItem.objects.select_related('posted_by')
@@ -46,11 +42,10 @@ class LostFoundListCreateView(generics.ListCreateAPIView):
 
 
 class LostFoundDetailView(generics.RetrieveUpdateDestroyAPIView):
-    """GET/PATCH/DELETE /api/lost-found/<id>/"""
-    queryset           = LostFoundItem.objects.all().select_related('posted_by')
-    serializer_class   = LostFoundSerializer
+    queryset = LostFoundItem.objects.all().select_related('posted_by')
+    serializer_class = LostFoundSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
-    parser_classes     = [MultiPartParser, FormParser, JSONParser]
+    parser_classes = [MultiPartParser, FormParser, JSONParser]
 
     def update(self, request, *args, **kwargs):
         if self.get_object().posted_by != request.user and not request.user.is_staff:
@@ -64,7 +59,6 @@ class LostFoundDetailView(generics.RetrieveUpdateDestroyAPIView):
 
 
 class MarkResolvedView(APIView):
-    """POST /api/lost-found/<id>/resolve/"""
     permission_classes = [IsAuthenticated]
 
     def post(self, request, pk):
@@ -78,8 +72,7 @@ class MarkResolvedView(APIView):
 
 
 class MyItemsView(generics.ListAPIView):
-    """GET /api/lost-found/mine/"""
-    serializer_class   = LostFoundSerializer
+    serializer_class = LostFoundSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):

@@ -1,17 +1,14 @@
-"""
-apps/users/serializers.py
-"""
 from rest_framework import serializers
 from django.contrib.auth.password_validation import validate_password
 from .models import StudentUser
 
 
 class RegisterSerializer(serializers.ModelSerializer):
-    password  = serializers.CharField(write_only=True, validators=[validate_password])
+    password = serializers.CharField(write_only=True, validators=[validate_password])
     password2 = serializers.CharField(write_only=True, label='Confirm Password')
 
     class Meta:
-        model  = StudentUser
+        model = StudentUser
         fields = [
             'username', 'email', 'first_name', 'last_name',
             'student_id', 'department', 'university',
@@ -19,7 +16,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         ]
         extra_kwargs = {
             'first_name': {'required': True},
-            'last_name':  {'required': True},
+            'last_name': {'required': True},
         }
 
     def validate_username(self, value):
@@ -50,7 +47,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
     full_name = serializers.ReadOnlyField()
 
     class Meta:
-        model  = StudentUser
+        model = StudentUser
         fields = [
             'id', 'username', 'email', 'first_name', 'last_name',
             'full_name', 'student_id', 'department', 'university',
@@ -61,9 +58,9 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
 
 class ChangePasswordSerializer(serializers.Serializer):
-    old_password  = serializers.CharField(required=True, write_only=True)
-    new_password  = serializers.CharField(required=True, write_only=True,
-                                          validators=[validate_password])
+    old_password = serializers.CharField(required=True, write_only=True)
+    new_password = serializers.CharField(required=True, write_only=True,
+                                         validators=[validate_password])
     new_password2 = serializers.CharField(required=True, write_only=True)
 
     def validate(self, attrs):

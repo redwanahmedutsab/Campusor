@@ -1,4 +1,3 @@
-// src/components/Navbar.jsx
 import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import useAuth from '../hooks/useAuth';
@@ -29,12 +28,10 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="flex items-center h-16 gap-6">
 
-          {/* Logo */}
           <Link to="/" className="flex items-center gap-2 font-bold text-xl text-indigo-600 shrink-0">
             🎓 <span className="text-gray-900">Campusor</span>
           </Link>
 
-          {/* Desktop nav links */}
           <div className="hidden md:flex items-center gap-1 flex-1">
             {navLinks.map(link => (
               <Link
@@ -51,7 +48,6 @@ const Navbar = () => {
             ))}
           </div>
 
-          {/* Right side */}
           <div className="hidden md:flex items-center gap-3 ml-auto">
             {isAuthenticated ? (
               <>
@@ -104,7 +100,6 @@ const Navbar = () => {
             )}
           </div>
 
-          {/* Mobile hamburger */}
           <button
             className="md:hidden ml-auto p-2 text-gray-600 hover:text-gray-900"
             onClick={() => setMenuOpen(p => !p)}
@@ -114,7 +109,6 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile menu */}
       {menuOpen && (
         <div className="md:hidden border-t border-gray-200 bg-white px-4 py-3 space-y-1">
           {navLinks.map(link => (

@@ -1,16 +1,13 @@
-"""
-apps/lost_found/serializers.py
-"""
 from rest_framework import serializers
 from .models import LostFoundItem
 
 
 class LostFoundSerializer(serializers.ModelSerializer):
     posted_by_name = serializers.CharField(source='posted_by.full_name', read_only=True)
-    is_owner       = serializers.SerializerMethodField()
+    is_owner = serializers.SerializerMethodField()
 
     class Meta:
-        model  = LostFoundItem
+        model = LostFoundItem
         fields = [
             'id', 'item_type', 'title', 'description', 'category', 'status',
             'location', 'date_occurred', 'image',

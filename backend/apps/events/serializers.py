@@ -1,18 +1,15 @@
-"""
-apps/events/serializers.py
-"""
 from rest_framework import serializers
 from .models import Event, RSVP
 
 
 class EventListSerializer(serializers.ModelSerializer):
-    organizer_name  = serializers.CharField(source='organizer.full_name', read_only=True)
-    attendee_count  = serializers.ReadOnlyField()
-    is_full         = serializers.ReadOnlyField()
-    user_rsvp       = serializers.SerializerMethodField()
+    organizer_name = serializers.CharField(source='organizer.full_name', read_only=True)
+    attendee_count = serializers.ReadOnlyField()
+    is_full = serializers.ReadOnlyField()
+    user_rsvp = serializers.SerializerMethodField()
 
     class Meta:
-        model  = Event
+        model = Event
         fields = [
             'id', 'title', 'category', 'status', 'start_datetime',
             'end_datetime', 'location', 'venue', 'is_free', 'ticket_price',
@@ -30,7 +27,7 @@ class EventListSerializer(serializers.ModelSerializer):
 
 class EventDetailSerializer(EventListSerializer):
     description = serializers.CharField()
-    tags        = serializers.CharField()
+    tags = serializers.CharField()
 
     class Meta(EventListSerializer.Meta):
         fields = EventListSerializer.Meta.fields + ['description', 'tags', 'updated_at']
@@ -38,7 +35,7 @@ class EventDetailSerializer(EventListSerializer):
 
 class EventCreateSerializer(serializers.ModelSerializer):
     class Meta:
-        model  = Event
+        model = Event
         fields = [
             'title', 'description', 'category', 'start_datetime', 'end_datetime',
             'location', 'venue', 'max_attendees', 'is_free', 'ticket_price',
@@ -55,5 +52,5 @@ class EventCreateSerializer(serializers.ModelSerializer):
 
 class RSVPSerializer(serializers.ModelSerializer):
     class Meta:
-        model  = RSVP
+        model = RSVP
         fields = ['id', 'status', 'created_at']

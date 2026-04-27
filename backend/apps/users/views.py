@@ -1,6 +1,3 @@
-"""
-apps/users/views.py
-"""
 from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -12,9 +9,8 @@ from .serializers import RegisterSerializer, UserProfileSerializer, ChangePasswo
 
 
 class RegisterView(generics.CreateAPIView):
-    """POST /api/auth/register/"""
-    queryset           = StudentUser.objects.all()
-    serializer_class   = RegisterSerializer
+    queryset = StudentUser.objects.all()
+    serializer_class = RegisterSerializer
     permission_classes = [AllowAny]
 
     def create(self, request, *args, **kwargs):
@@ -26,15 +22,14 @@ class RegisterView(generics.CreateAPIView):
             "message": "Account created successfully.",
             "user": UserProfileSerializer(user).data,
             "tokens": {
-                "access":  str(refresh.access_token),
+                "access": str(refresh.access_token),
                 "refresh": str(refresh),
             },
         }, status=status.HTTP_201_CREATED)
 
 
 class ProfileView(generics.RetrieveUpdateAPIView):
-    """GET/PATCH /api/auth/profile/"""
-    serializer_class   = UserProfileSerializer
+    serializer_class = UserProfileSerializer
     permission_classes = [IsAuthenticated]
 
     def get_object(self):
@@ -42,7 +37,6 @@ class ProfileView(generics.RetrieveUpdateAPIView):
 
 
 class ChangePasswordView(APIView):
-    """POST /api/auth/change-password/"""
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
@@ -60,7 +54,6 @@ class ChangePasswordView(APIView):
 
 
 class LogoutView(APIView):
-    """POST /api/auth/logout/"""
     permission_classes = [IsAuthenticated]
 
     def post(self, request):

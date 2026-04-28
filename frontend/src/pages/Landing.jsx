@@ -1,4 +1,5 @@
 import {useNavigate} from 'react-router-dom';
+import RenderWakeUpToast from '../components/RenderWakeUpToast';
 
 const features = [
     {
@@ -33,6 +34,7 @@ const Landing = () => {
 
     return (
         <div className="min-h-screen bg-white">
+            <RenderWakeUpToast/>
 
             <section className="bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-white">
                 <div className="max-w-5xl mx-auto px-6 py-24 text-center">

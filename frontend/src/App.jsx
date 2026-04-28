@@ -2,6 +2,7 @@ import {BrowserRouter as Router, Routes, Route, Navigate} from 'react-router-dom
 import {AuthProvider} from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import Navbar from './components/Navbar';
+import WakeUpToast from './components/WakeUpToast';   // ← new
 
 import Landing from './pages/Landing';
 import Login from './pages/Login';
@@ -20,6 +21,10 @@ function App() {
         <AuthProvider>
             <Router>
                 <Navbar/>
+
+                {/* Render free-tier wake-up notification — mounts once, self-dismisses */}
+                <WakeUpToast />
+
                 <Routes>
                     <Route path="/" element={<Landing/>}/>
                     <Route path="/login" element={<Login/>}/>

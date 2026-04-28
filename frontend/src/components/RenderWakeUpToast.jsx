@@ -1,13 +1,12 @@
-import { useEffect, useState, useRef } from 'react';
+import {useEffect, useState, useRef} from 'react';
 
 const BACKEND_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000/api';
 const HEALTH_ENDPOINT = `${BACKEND_URL}/auth/`;
-const CHECK_INTERVAL_MS = 10000; // re-check every 10 seconds until awake
-const MAX_WAIT_SECONDS = 90;    // countdown displayed to user
+const CHECK_INTERVAL_MS = 10000;
+const MAX_WAIT_SECONDS = 90;
 
 const RenderWakeUpToast = () => {
     const [visible, setVisible] = useState(false);
-    const [awake, setAwake] = useState(false);
     const [secondsLeft, setSecondsLeft] = useState(MAX_WAIT_SECONDS);
     const [dots, setDots] = useState('');
     const intervalRef = useRef(null);
@@ -24,7 +23,6 @@ const RenderWakeUpToast = () => {
                 signal: controller.signal,
             });
             clearTimeout(timeout);
-            // Any HTTP response (even 401/404) means the server is up
             if (res.status < 500 || res.status === 405) {
                 return true;
             }
@@ -38,39 +36,32 @@ const RenderWakeUpToast = () => {
         let mounted = true;
 
         const init = async () => {
-            // First quick check — if backend is already up, show nothing
             const isUp = await checkBackend();
             if (!mounted) return;
 
             if (isUp) {
-                setAwake(true);
                 setVisible(false);
                 return;
             }
 
-            // Backend is sleeping — show the toast
             setVisible(true);
             setSecondsLeft(MAX_WAIT_SECONDS);
 
-            // Countdown timer
             countdownRef.current = setInterval(() => {
                 if (!mounted) return;
                 setSecondsLeft(prev => (prev > 0 ? prev - 1 : 0));
             }, 1000);
 
-            // Animated dots
             dotsRef.current = setInterval(() => {
                 if (!mounted) return;
                 setDots(d => (d.length >= 3 ? '' : d + '.'));
             }, 500);
 
-            // Poll backend until it wakes up
             intervalRef.current = setInterval(async () => {
                 if (!mounted) return;
                 const up = await checkBackend();
                 if (up && !dismissed.current) {
                     dismissed.current = true;
-                    setAwake(true);
                     setVisible(false);
                     clearInterval(intervalRef.current);
                     clearInterval(countdownRef.current);
@@ -95,25 +86,23 @@ const RenderWakeUpToast = () => {
 
     return (
         <>
-            {/* Backdrop blur overlay */}
             <div className="fixed inset-0 z-50 flex items-center justify-center px-4"
-                 style={{ backgroundColor: 'rgba(15, 23, 42, 0.6)', backdropFilter: 'blur(4px)' }}>
+                 style={{backgroundColor: 'rgba(15, 23, 42, 0.6)', backdropFilter: 'blur(4px)'}}>
 
                 <div className="relative bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden"
-                     style={{ animation: 'slideUp 0.4s ease-out' }}>
+                     style={{animation: 'slideUp 0.4s ease-out'}}>
 
-                    {/* Progress bar at top */}
                     <div className="h-1 bg-gray-100 w-full">
                         <div
                             className="h-full bg-indigo-500 transition-all duration-1000 ease-linear"
-                            style={{ width: `${progress}%` }}
+                            style={{width: `${progress}%`}}
                         />
                     </div>
 
                     <div className="px-6 pt-6 pb-5">
-                        {/* Icon + title row */}
                         <div className="flex items-start gap-4">
-                            <div className="flex-shrink-0 w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center text-2xl">
+                            <div
+                                className="flex-shrink-0 w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center text-2xl">
                                 🌐
                             </div>
                             <div className="flex-1 min-w-0">
@@ -121,14 +110,15 @@ const RenderWakeUpToast = () => {
                                     Backend is waking up{dots}
                                 </h3>
                                 <p className="text-gray-500 text-sm mt-1 leading-relaxed">
-                                    The server is hosted on <span className="font-semibold text-indigo-600">Render's free tier</span> and spins down when idle.
+                                    The server is hosted on <span className="font-semibold text-indigo-600">Render's free tier</span> and
+                                    spins down when idle.
                                     Please wait while it starts up — this usually takes under a minute.
                                 </p>
                             </div>
                         </div>
 
-                        {/* Countdown */}
-                        <div className="mt-5 flex items-center gap-3 bg-indigo-50 border border-indigo-100 rounded-xl px-4 py-3">
+                        <div
+                            className="mt-5 flex items-center gap-3 bg-indigo-50 border border-indigo-100 rounded-xl px-4 py-3">
                             <div className="flex-shrink-0">
                                 {/* Spinner */}
                                 <div style={{
@@ -137,7 +127,7 @@ const RenderWakeUpToast = () => {
                                     borderTopColor: '#4f46e5',
                                     borderRadius: '50%',
                                     animation: 'spin 0.8s linear infinite'
-                                }} />
+                                }}/>
                             </div>
                             <p className="text-indigo-700 text-sm font-medium">
                                 Estimated wait:&nbsp;
@@ -148,7 +138,6 @@ const RenderWakeUpToast = () => {
                             </p>
                         </div>
 
-                        {/* Dismiss note */}
                         <p className="text-center text-xs text-gray-400 mt-4">
                             This toast will disappear automatically once the server is online.
                         </p>
@@ -156,7 +145,6 @@ const RenderWakeUpToast = () => {
                 </div>
             </div>
 
-            {/* Keyframe styles */}
             <style>{`
                 @keyframes slideUp {
                     from { opacity: 0; transform: translateY(24px) scale(0.97); }
